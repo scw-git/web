@@ -1,0 +1,251 @@
+<template>
+  <div class="home-content">
+    <a-carousel autoplay>
+      <div>
+        <img src="@/assets/carousel/4.jpg" alt />
+      </div>
+      <div>
+        <img src="@/assets/carousel/2.jpg" alt />
+      </div>
+      <div>
+        <img src="@/assets/carousel/3.jpg" alt />
+      </div>
+      <div>
+        <img src="@/assets/carousel/1.jpg" alt />
+      </div>
+    </a-carousel>
+    <!-- 猜你喜欢 -->
+    <div class="fav">
+      <div class="fav-title">
+        <p style="color:#FF5500;border-left: 4px solid #ff4f25;">
+          猜你喜欢
+          <router-link
+            :to="{path:'/recommend/recommendList'}"
+            style="float:right;color:#FF5500"
+          >更多 ></router-link>
+        </p>
+      </div>
+      <div class="fav-content">
+        <div class="items">
+          <div
+            class="item"
+            v-for="(item,i) in obj.recommend"
+            :key="i"
+            @click="toRecommendDetail(item._id)"
+          >
+            <div class="img-wrap">
+              <img :src="item.imgUrl[0].url" alt />
+            </div>
+            <h5>{{item.name}}</h5>
+            <div class="price">￥{{item.price}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 手机 -->
+    <div class="fav">
+      <div class="fav-title">
+        <p style="color:#FF5500;border-left: 4px solid #ff4f25;">
+          手机
+          <router-link
+            :to="{path:'/allProduct/allProductList',query:{type:'手机'}}"
+            style="float:right;color:#FF5500"
+          >更多 ></router-link>
+        </p>
+      </div>
+      <div class="fav-content">
+        <div class="items">
+          <div class="item" v-for="(item,i) in obj.phone" :key="i" @click="toDetail(item._id)">
+            <div class="img-wrap">
+              <img :src="item.imgUrl[0].url" alt />
+            </div>
+            <h5>{{item.name}}</h5>
+            <div class="price">￥{{item.price}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="fav">
+      <div class="fav-title">
+        <p style="color:#FF5500;border-left: 4px solid #ff4f25;">
+          化妆品
+          <router-link
+            :to="{path:'/allProduct/allProductList',query:{type:'化妆品'}}"
+            style="float:right;color:#FF5500"
+          >更多 ></router-link>
+        </p>
+      </div>
+      <div class="fav-content">
+        <div class="items">
+          <div class="item" v-for="(item,i) in obj.cosmetic" :key="i" @click="toDetail(item._id)">
+            <div class="img-wrap">
+              <img :src="item.imgUrl[0].url" alt />
+            </div>
+            <h5>{{item.name}}</h5>
+            <div class="price">￥{{item.price}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 化妆品 -->
+    <!-- <div class="fav">
+      <div class="fav-title">
+        <p style="color:#ff9f00;border-left: 4px solid #ff9f00;">
+          电子产品
+          <a style="float:right;color:#ff9f00">更多 ></a>
+        </p>
+      </div>
+      <div class="fav-content">
+        <div class="items">
+          <div class="item" v-for="item in (5)" :key="item" @click="toDetail">
+            <div class="img-wrap">
+              <img src="@/assets/content/1.jpg" alt />
+            </div>
+            <h5>花去哪儿findflower干花真花樱桃花背影蓬蓬裙永生花</h5>
+            <div class="price">￥19.99</div>
+          </div>
+        </div>
+      </div>
+    </div>-->
+  </div>
+</template>
+<script>
+export default {
+  data() {
+    return {
+      obj: {
+        phone: [],
+        cosmetic: [],
+        recommend: []
+      }
+    };
+  },
+  created() {
+    this.getRecommendData("", "recommend", true);
+    this.getData("手机", "phone");
+    this.getData("化妆品", "cosmetic");
+    // console.log(this.obj);
+  },
+  methods: {
+    getData(type, rename, recommend) {
+      let params = {
+        recommend,
+        type,
+        limit: 10
+      };
+      // console.log(params);
+      //下面的要加个大括号，get方法携带的参数在params中。但后端获取是在query中
+      //原来的请求方式是：axios.get('xxx',{params:{xxx:xxx}})
+      this.$http.getProduct({ params }).then(res => {
+        this.obj[rename] = res.data.data;
+      });
+    },
+    getRecommendData(type, rename, recommend) {
+      let params = {
+        recommend,
+        type
+      };
+      this.$http.getProduct({ params }).then(res => {
+        let all = res.data.data;
+        this.obj.recommend = this.getRandomArray(all, 10);
+      });
+    },
+    getRandomArray(arr, n) {
+      let newArr = [];
+      while (newArr.length < n) {
+        let ran = Math.ceil(Math.random() * arr.length);
+        if (ran < arr.length) {
+          newArr.push(arr[ran]);
+          arr.splice(ran, 1);
+        }
+      }
+      return newArr;
+    },
+
+    toRecommendDetail(id) {
+      this.$router.push({
+        path: "/recommend/itemDetail",
+        query: {
+          id
+        }
+      });
+    },
+    toDetail(id) {
+      this.$emit("isShow", "ok");
+      this.$router.push({
+        //query用path，params用name
+        path: "/allProduct/itemDetail",
+        query: {
+          id
+        }
+      });
+    }
+  }
+};
+</script>
+<style  scoped>
+.ant-carousel >>> .slick-slide {
+  text-align: center;
+  height: 360px;
+  line-height: 360px;
+  background: #364d79;
+  overflow: hidden;
+}
+
+.ant-carousel >>> .slick-slide h3 {
+  color: #fff;
+}
+</style>
+<style lang="scss" scoped>
+.home-content {
+  margin: 5px 10%;
+  img {
+    width: 100%;
+  }
+  .fav {
+    background: #fff;
+    margin: 10px 0;
+    width: 100%;
+    height: 100%;
+    .fav-title {
+      padding: 20px 20px 10px 20px;
+      border-bottom: 1px solid #f4f4f4;
+      color: #ad46df;
+      font-size: 16px;
+      p {
+        border-left: 4px solid #8558d6;
+        padding-left: 10px;
+      }
+    }
+    .fav-content {
+      .items {
+        display: flex;
+        flex-wrap: wrap;
+        .item {
+          width: 20%;
+          padding: 15px 15px;
+          border: 1px solid #f4f4f4;
+          letter-spacing: 1px;
+          cursor: pointer;
+          &:hover {
+            border: 1px solid #ff4400;
+          }
+          h5 {
+            color: #666;
+            margin: 10px 0;
+            word-break: break-all;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+          }
+          .price {
+            color: #f40;
+          }
+        }
+      }
+    }
+  }
+}
+</style>
