@@ -23,12 +23,15 @@ import end from "../end/index";
 import homeContent from "../body/homeContent";
 import allProduct from "../body/allProduct";
 import shoppingCar from "../body/shoppingCar";
+import userCenter from "../body/userCenter";
+
 export default {
   components: {
     end,
     homeContent,
     allProduct,
-    shoppingCar
+    shoppingCar,
+    userCenter
   },
   data() {
     return {

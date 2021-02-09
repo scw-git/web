@@ -31,6 +31,29 @@ const routes = [
 
       },
       {
+        path: '/userCenter',
+        component: () => import('../views/body/userCenter.vue'),
+        redirect: '/userCenter/userInfo',
+        children: [
+          {
+            path: 'userInfo',
+            component: () => import('../views/body/components/userInfo.vue')
+          },
+          {
+            path: 'changePassword',
+            component: () => import('../views/body/components/changePassword.vue')
+          },
+          {
+            path: 'myCount',
+            component: () => import('../views/body/components/myCount.vue')
+          }, {
+            path: 'address',
+            component: () => import('../views/body/components/address.vue')
+          }
+        ]
+
+      },
+      {
         path: '/recommend',
         component: () => import('../views/body/recommend.vue'),
         redirect: '/recommend/recommendList',

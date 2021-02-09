@@ -4,6 +4,7 @@
       <span class="welcome">欢迎使用推荐系统</span>
       <span v-if="name">欢迎：{{name}}</span>
       <span v-if="name" style="cursor:pointer" @click="toShopping">【购物车】</span>
+      <span v-if="name" style="cursor:pointer" @click="toUserCenter">【用户中心】</span>
       <span v-if="name" style="cursor:pointer" @click="logout">【退出登录】</span>
       <span v-if="!name" class="login" @click="openLogin">亲，请登录哦</span>
       <span v-if="!name" class="register" @click="openRegister">注册</span>
@@ -179,8 +180,19 @@ export default {
   },
   created() {
     this.name = window.sessionStorage.getItem("graduation-design");
+    this.$vue.$on("changePw", res => {
+      if (res == "ok") {
+        this.name = "";
+      }
+    });
   },
+  watch: {},
   methods: {
+    toUserCenter() {
+      this.$router.push({
+        path: "/userCenter"
+      });
+    },
     toShopping() {
       this.$router.push({
         path: "/shoppingCar"
@@ -207,12 +219,16 @@ export default {
         onOk: () => {
           window.sessionStorage.removeItem("graduation-design");
           this.name = "";
+          this.$router.push({
+            path: "/index"
+          });
         }
       });
     },
     loginSubmitForm() {
       this.showError = false;
       this.$refs.loginForm.validate(valid => {
+        // console.log("login", valid);
         if (valid) {
           let params = {
             // 不能直接用解构，与后端的字段不一样

@@ -79,20 +79,17 @@ export default {
     return {
       buyNum: 1,
       data: ""
-      // shoppingItem: {
-      //   userName: window.sessionStorage.getItem("graduation-design"),
-      //   name: this.data.name,
-      //   price: this.data.price,
-      //   count: this.data.count
-      //   // time: getDate()
-      // }
     };
   },
   created() {
     //不能直接用传过来的数据渲染，如果在该页面刷新的话数据会清除。所以应该是根据传过来的_id重新请求数据
     this.getDetail(this.$route.query.id);
   },
-
+  watch: {
+    $route() {
+      this.getDetail(this.$route.query.id);
+    }
+  },
   methods: {
     getDate() {
       let date = new Date();
@@ -120,13 +117,12 @@ export default {
     },
     add() {
       if (this.buyNum >= this.data.count) {
-        this.$message.warning("不能在加了!!");
+        this.$message.warning("库存不足啦!!");
       } else {
         this.buyNum++;
       }
     },
     verifyNum(e) {
-      console.log(e);
       if (!(e.keyCode <= 57 && e.keyCode >= 48) && e.keyCode != 8) {
         e.returnValue = false;
       }
@@ -141,12 +137,25 @@ export default {
       if (!window.sessionStorage.getItem("graduation-design")) {
         this.$message.warning("请先登录在购物");
       } else {
+        let { name, price, _id } = this.data;
         let params = {
-          ...this.data,
+          name,
+          price,
+          _id,
+          imgUrl: this.data.imgUrl[0].url,
+          count: this.buyNum, //购买数量
+          allCount: this.data.count, //库存
           userName: window.sessionStorage.getItem("graduation-design"),
           time: this.getDate()
         };
-        console.log(params);
+        // console.log(11, params);
+
+        this.$http.shoppingItem(params).then(res => {
+          if (res.data.userName) {
+            this.$message.success("成功加入购物车");
+          }
+          // console.log(res);
+        });
       }
     }
     //@keyup = xxx（前提是input 类型为text）

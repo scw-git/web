@@ -12,6 +12,9 @@ Vue.use(Antd)
 Vue.prototype.$http = $http
 Vue.config.productionTip = false
 
+//用于修改密码时，退出到首页，页面要重新登录
+Vue.prototype.$vue = new Vue()
+
 new Vue({
   router,
   store,

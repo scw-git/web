@@ -87,9 +87,12 @@ export default {
         this.type = res.data;
       });
     },
-    toDetail() {
+    toDetail(id) {
       this.$router.push({
-        path: "/allProduct/itemDetail"
+        path: "/allProduct/itemDetail",
+        query: {
+          id
+        }
       });
     },
     toItemList(type) {

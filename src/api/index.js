@@ -16,7 +16,13 @@ export default {
     getProductDetail: (params) => http.get('/productDetail', params),
     register: (params) => http.post('/register', params),
     userName: (params) => http.post('/userName', params),
-    login: (params) => http.post('/login', params)
-
+    login: (params) => http.post('/login', params),
+    shoppingItem: (params) => http.post('/shoppingItem', params),
+    getShoppingItem: (params) => http.get('/shoppingItem', params),
+    delShoppingItem: (params) => http.delete('/shoppingItem', params),
+    getUsers: (params) => http.get('/user', params),
+    updatePw: (params) => http.put('/updatePw', params),
+    address: (params) => http.post('/address', params),
+    getAddress: (params) => http.get('/getAddress', params),
 }
 
