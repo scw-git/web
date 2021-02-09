@@ -20,9 +20,14 @@ export default {
     shoppingItem: (params) => http.post('/shoppingItem', params),
     getShoppingItem: (params) => http.get('/shoppingItem', params),
     delShoppingItem: (params) => http.delete('/shoppingItem', params),
+    delAllShoppingItem: () => http.get('/delAllShoppingItem'),//删除购物车中所有商品
     getUsers: (params) => http.get('/user', params),
     updatePw: (params) => http.put('/updatePw', params),
     address: (params) => http.post('/address', params),
     getAddress: (params) => http.get('/getAddress', params),
+    order: (params) => http.post('/order', params),//提交（生成）订单
+    getOrder: (params) => http.get('/getOrder', params),//提交（生成）订单
+    updateOrder: (params) => http.put('/updateOrder', params),//更新支付状态订单
+
 }
 

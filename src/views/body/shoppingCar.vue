@@ -39,19 +39,50 @@
           </a-table-column>
         </a-table>
         <div style="display:flex;flex-direction:row-reverse;margin-top:10px;">
-          <a-button size="large" type="primary" :disabled="isShow" @click="account">结算</a-button>
+          <a-button size="large" type="primary" :disabled="isShow" @click="buy">结算</a-button>
         </div>
       </div>
     </a-card>
+    <a-modal
+      :footer="null"
+      :width="900"
+      cancelText="取消"
+      okText="马上支付"
+      :maskClosable="false"
+      v-model="visible"
+      title="我的订单"
+    >
+      <a-table
+        :pagination="false"
+        :data-source="dataAcount"
+        bordered
+        :rowKey="(record,index)=>{return index}"
+      >
+        <a-table-column title="订单号" data-index="orderNumber"></a-table-column>
+        <a-table-column title="总计" data-index="total"></a-table-column>
+        <a-table-column title="生成时间" data-index="date"></a-table-column>
+        <a-table-column title="状态" data-index="status"></a-table-column>
+        <a-table-column title="收货人" data-index="consignee"></a-table-column>
+        <a-table-column title="收货地址" data-index="address"></a-table-column>
+        <a-table-column title="联系方式" data-index="myPhone"></a-table-column>
+      </a-table>
+      <div class="btn" style="display:flex;justify-content:center;margin-top:20px;">
+        <a-button style="margin-right:50px;" @click="cancelBuy">取消</a-button>
+        <a-button type="primary" @click="buyNow">马上支付</a-button>
+      </div>
+    </a-modal>
   </div>
 </template>
 <script>
 export default {
   data() {
     return {
-      // locale: { emptyText: "没有商品，快去购物吧" },
-      tableData: [],
-      isShow: true
+      tableData: [], //购物车里面的数据
+      isShow: true,
+      visible: false,
+      dataAcount: [], //点击购买生成的订单数据
+      total: 0, //购物车商品的总价格
+      orderNumber: "" //点击购买生成的订单号
     };
   },
   created() {
@@ -63,16 +94,74 @@ export default {
         e.returnValue = false;
       }
     },
-    account() {
+    getDate(type) {
+      let date = new Date();
+      let y = date.getFullYear();
+      let m = date.getMonth() + 1;
+      m = m < 10 ? "0" + m : m;
+      let d = date.getDate();
+      d = d < 10 ? "0" + d : d;
+      let h = date.getHours();
+      h = h < 10 ? "0" + h : h;
+      let minute = date.getMinutes();
+      minute = minute < 10 ? "0" + minute : minute;
+      let s = date.getSeconds();
+      s = s < 10 ? "0" + s : s;
+      if (type == "orderNumber") {
+        return `PD${y}${m}${d}${h}${minute}${s}`;
+      } else if ((type = "date")) {
+        return `${y}-${m}-${d} ${h}:${minute}`;
+      }
+    },
+    //点击了马上支付
+    buyNow() {
+      let params = {
+        userName: window.sessionStorage.getItem("graduation-design"),
+        orderNumber: this.orderNumber,
+        status: "已付款"
+      };
+      this.$http.updateOrder(params); //更新付款状态
+      this.$message.success("支付成功");
+      this.cancelBuy();
+    },
+    //点击了取消
+    cancelBuy() {
+      this.visible = false;
+      this.delAllShoppingItem();
+      this.$router.push({
+        path: "/userCenter/myCount"
+      });
+    },
+    //结算
+    buy() {
       let params = {
         userName: window.sessionStorage.getItem("graduation-design")
       };
       this.$http.getAddress({ params }).then(res => {
         if (res.data.msg) {
           //没有添加地址
-          alert(11);
+          this.$message.warning("请先添加地址");
+          this.$router.push({
+            path: "/userCenter/address"
+          });
         } else {
-          alert(22);
+          this.visible = true;
+          let { userName, address, consignee, myPhone } = res.data;
+          let params = {
+            userName,
+            orderNumber: this.getDate("orderNumber"),
+            total: this.total + ".00",
+            date: this.getDate("date"),
+            consignee,
+            myPhone,
+            address,
+            status: "未付款"
+          };
+          this.$http.order(params).then(res => {
+            this.dataAcount = res.data;
+            this.orderNumber = res.data[0].orderNumber;
+            // console.log(res.data);
+          });
         }
       });
     },
@@ -110,14 +199,21 @@ export default {
         }
       });
     },
+    //删除购物车中所有商品
+    delAllShoppingItem() {
+      this.$http.delAllShoppingItem();
+    },
     getShoppingItem(userName) {
       let params = {
         userName
       };
       this.$http.getShoppingItem({ params }).then(res => {
-        this.tableData = res.data;
-        if (this.tableData.length > 0) {
+        if (res.data.length > 0) {
           this.isShow = false;
+          this.tableData = res.data;
+          for (let i of res.data) {
+            this.total = this.total + i.count * i.price;
+          }
         } else {
           this.isShow = true;
         }
