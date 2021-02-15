@@ -33,7 +33,6 @@
 export default {
   data() {
     return {
-      // small: "small",
       dataAcount: [],
       loading: false
     };
