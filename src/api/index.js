@@ -19,6 +19,7 @@ export default {
     login: (params) => http.post('/login', params),
     shoppingItem: (params) => http.post('/shoppingItem', params),
     getShoppingItem: (params) => http.get('/shoppingItem', params),
+    updateShoppingItem: (params) => http.put('/updateShoppingItem', params),
     delShoppingItem: (params) => http.delete('/shoppingItem', params),
     delAllShoppingItem: () => http.get('/delAllShoppingItem'),//删除购物车中所有商品
     getUsers: (params) => http.get('/user', params),

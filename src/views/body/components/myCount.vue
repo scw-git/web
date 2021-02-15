@@ -20,9 +20,9 @@
         <template slot-scope="record">
           <span v-if="record.status=='未付款'">
             <a style="margin-right:3px;" @click="pay(record)">付款</a>
-            <a @click="del(record._id)">/ 删除</a>
+            <a @click="del(record._id,'取消')">/ 取消</a>
           </span>
-          <a v-else @click="del(record._id)">删除</a>
+          <a v-else @click="del(record._id,'删除')">删除</a>
         </template>
       </a-table-column>
     </a-table>
@@ -59,10 +59,10 @@ export default {
         }
       });
     },
-    del(id) {
+    del(id, content) {
       this.$confirm({
         title: "提示",
-        content: "确认删除该订单？",
+        content: `确认${content}该订单？`,
         cancelText: "取消",
         onOk: () => {
           let params = {
@@ -70,7 +70,7 @@ export default {
           };
           this.$http.delOrder({ params }).then(res => {
             if (res.data.status == 200) {
-              this.$message.success("删除成功");
+              this.$message.success(`${content}成功`);
               this.getOrder();
             }
           });

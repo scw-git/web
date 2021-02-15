@@ -49,7 +49,7 @@ export default {
     this.getProductType();
     this.$http.getProduct().then(res => {
       let data = res.data.data;
-      this.data = this.getRandomArrayElements(data, 3);
+      this.data = this.getRandomArrayElements(data, 5);
     });
   },
   watch: {
@@ -60,8 +60,7 @@ export default {
         };
         this.$http.getProduct({ params }).then(res => {
           let data = res.data.data;
-          this.data = this.getRandomArrayElements(data, 3);
-          // console.log(this.data);
+          this.data = this.getRandomArrayElements(data, 5);
         });
       }
     }

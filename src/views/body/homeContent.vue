@@ -97,8 +97,7 @@ export default {
       obj: {
         phone: [],
         cosmetic: [],
-        recommend: [],
-        n: 0
+        recommend: []
       }
     };
   },
@@ -130,7 +129,9 @@ export default {
       this.$http.getProduct({ params }).then(res => {
         let all = res.data.data;
         // 这里有个重大的bug，如果用getRandomArray方法（自己写的），则所有的商品数少于等于10个。前端页面会一直没有响应
-        this.obj.recommend = this.getRandomArrayElements(all, 10);
+        //用getRandomArray，如果总数少于10，会出现undefined情况
+        this.obj.recommend = this.getRandomArray(all, 10);
+        // console.log(this.obj.recommend);
       });
     },
     getRandomArrayElements(arr, count) {
@@ -147,17 +148,17 @@ export default {
       }
       return shuffled.slice(min);
     },
-    // getRandomArray(arr, n) {
-    //   let newArr = [];
-    //   while (newArr.length < n) {
-    //     let ran = Math.ceil(Math.random() * arr.length);
-    //     if (ran < arr.length) {
-    //       newArr.push(arr[ran]);
-    //       arr.splice(ran, 1);
-    //     }
-    //   }
-    //   return newArr;
-    // },
+    getRandomArray(arr, n) {
+      let newArr = [];
+      while (newArr.length < n) {
+        let ran = Math.ceil(Math.random() * arr.length);
+        if (ran < arr.length) {
+          newArr.push(arr[ran]);
+          arr.splice(ran, 1);
+        }
+      }
+      return newArr;
+    },
 
     toRecommendDetail(id) {
       this.$router.push({

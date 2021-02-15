@@ -134,8 +134,13 @@ export default {
       this.$http.delOrder({ params });
       this.visible = false;
     },
-    //结算
+    //点击了结算
     buy() {
+      // 算出总价
+      for (let i of this.tableData) {
+        this.total = 0; //先清除上次的缓存
+        this.total = this.total + i.count * i.price;
+      }
       let params = {
         userName: window.sessionStorage.getItem("graduation-design")
       };
@@ -167,11 +172,21 @@ export default {
         }
       });
     },
+    //更新购买数量
+    updateNum(data) {
+      // console.log(this.tableData);
+      let params = {
+        id: data._id,
+        count: data.count
+      };
+      this.$http.updateShoppingItem(params);
+    },
     add(data) {
       if (data.count >= data.allCount) {
         this.$message.warning("库存不足啦!!");
       } else {
         data.count++;
+        this.updateNum(data);
       }
     },
     subtract(data) {
@@ -179,6 +194,7 @@ export default {
         this.$message.warning("不能再减了!!");
       } else {
         data.count--;
+        this.updateNum(data);
       }
     },
     del(id) {
@@ -209,12 +225,9 @@ export default {
         userName
       };
       this.$http.getShoppingItem({ params }).then(res => {
-        if (res.data.length >= 0) {
+        this.tableData = res.data;
+        if (res.data.length > 0) {
           this.isShow = false;
-          this.tableData = res.data;
-          for (let i of res.data) {
-            this.total = this.total + i.count * i.price;
-          }
         } else {
           this.isShow = true;
         }
