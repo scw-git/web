@@ -7,9 +7,6 @@
       <span @click="target='推荐商品'" :class="{target:target=='推荐商品'}">
         <router-link :to="{path:'/recommend'}">推荐商品</router-link>
       </span>
-      <!-- <span @click="target='特价商品'" :class="{target:target=='特价商品'}">
-        <router-link to="/itemList">特价商品</router-link>
-      </span>-->
       <span @click="target='全部商品'" :class="{target:target=='全部商品'}">
         <router-link to="/allProduct">全部商品</router-link>
       </span>

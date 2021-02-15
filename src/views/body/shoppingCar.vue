@@ -43,15 +43,7 @@
         </div>
       </div>
     </a-card>
-    <a-modal
-      :footer="null"
-      :width="900"
-      cancelText="取消"
-      okText="马上支付"
-      :maskClosable="false"
-      v-model="visible"
-      title="我的订单"
-    >
+    <a-modal :footer="null" :width="900" :maskClosable="false" v-model="visible" title="我的订单">
       <a-table
         :pagination="false"
         :data-source="dataAcount"
@@ -67,7 +59,8 @@
         <a-table-column title="联系方式" data-index="myPhone"></a-table-column>
       </a-table>
       <div class="btn" style="display:flex;justify-content:center;margin-top:20px;">
-        <a-button style="margin-right:50px;" @click="cancelBuy">取消</a-button>
+        <a-button style="margin-right:30px;" @click="cancelBuy">取消</a-button>
+        <a-button type="primary" style="margin-right:30px;" @click="laterBuy">稍后支付</a-button>
         <a-button type="primary" @click="buyNow">马上支付</a-button>
       </div>
     </a-modal>
@@ -113,6 +106,14 @@ export default {
         return `${y}-${m}-${d} ${h}:${minute}`;
       }
     },
+    //稍后支付
+    laterBuy() {
+      this.visible = false;
+      this.delAllShoppingItem();
+      this.$router.push({
+        path: "/userCenter/myCount"
+      });
+    },
     //点击了马上支付
     buyNow() {
       let params = {
@@ -122,15 +123,16 @@ export default {
       };
       this.$http.updateOrder(params); //更新付款状态
       this.$message.success("支付成功");
-      this.cancelBuy();
+      this.laterBuy();
     },
     //点击了取消
     cancelBuy() {
+      let params = {
+        id: this.dataAcount[0]._id
+      };
+      // 把生成的订单删除
+      this.$http.delOrder({ params });
       this.visible = false;
-      this.delAllShoppingItem();
-      this.$router.push({
-        path: "/userCenter/myCount"
-      });
     },
     //结算
     buy() {
@@ -189,7 +191,6 @@ export default {
             id
           };
           this.$http.delShoppingItem({ params }).then(res => {
-            // console.log(res);
             if (res.data.status == 200) {
               this.getShoppingItem(
                 window.sessionStorage.getItem("graduation-design")
@@ -208,7 +209,7 @@ export default {
         userName
       };
       this.$http.getShoppingItem({ params }).then(res => {
-        if (res.data.length > 0) {
+        if (res.data.length >= 0) {
           this.isShow = false;
           this.tableData = res.data;
           for (let i of res.data) {

@@ -25,34 +25,7 @@ const routes = [
         component: () => import('../views/body/homeContent.vue')
 
       },
-      {
-        path: '/shoppingCar',
-        component: () => import('../views/body/shoppingCar.vue')
 
-      },
-      {
-        path: '/userCenter',
-        component: () => import('../views/body/userCenter.vue'),
-        redirect: '/userCenter/userInfo',
-        children: [
-          {
-            path: 'userInfo',
-            component: () => import('../views/body/components/userInfo.vue')
-          },
-          {
-            path: 'changePassword',
-            component: () => import('../views/body/components/changePassword.vue')
-          },
-          {
-            path: 'myCount',
-            component: () => import('../views/body/components/myCount.vue')
-          }, {
-            path: 'address',
-            component: () => import('../views/body/components/address.vue')
-          }
-        ]
-
-      },
       {
         path: '/recommend',
         component: () => import('../views/body/recommend.vue'),
@@ -84,35 +57,35 @@ const routes = [
             component: () => import('../views/body/components/itemDetail.vue')
           },
         ]
-        // children: [
-        //   {
-        //     path: '/itemDetail',
-        //     component: () => import('../views/body/components/itemDetail.vue')
-        //   },
-        //   {
-        //     path: '/itemList',
-        //     component: () => import('../views/body/components/itemList.vue')
-        //   }, {
-        //     path: '/recommend',
-        //     component: () => import('../views/body/components/recommend.vue')
-        //   },
-        //   {
-        //     path: '/recommendList',
-        //     component: () => import('../views/body/components/recommendList.vue')
-        //   },
-        // ]
       },
+      {
+        path: '/shoppingCar',
+        component: () => import('../views/body/shoppingCar.vue')
 
+      },
+      {
+        path: '/userCenter',
+        component: () => import('../views/body/userCenter.vue'),
+        redirect: '/userCenter/userInfo',
+        children: [
+          {
+            path: 'userInfo',
+            component: () => import('../views/body/components/userInfo.vue')
+          },
+          {
+            path: 'changePassword',
+            component: () => import('../views/body/components/changePassword.vue')
+          },
+          {
+            path: 'myCount',
+            component: () => import('../views/body/components/myCount.vue')
+          }, {
+            path: 'address',
+            component: () => import('../views/body/components/address.vue')
+          }
+        ]
 
-
-
-      // {
-      //   path: '/recommendList',
-      //   component: () => import('../views/body/components/recommendList.vue')
-      // },
-
-
-
+      },
     ]
   },
 ]

@@ -28,6 +28,8 @@ export default {
     order: (params) => http.post('/order', params),//提交（生成）订单
     getOrder: (params) => http.get('/getOrder', params),//提交（生成）订单
     updateOrder: (params) => http.put('/updateOrder', params),//更新支付状态订单
+    delOrder: (params) => http.delete('/delOrder', params),//删除订单
+
 
 }
 

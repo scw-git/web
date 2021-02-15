@@ -131,6 +131,22 @@ export default {
       if (!window.sessionStorage.getItem("graduation-design")) {
         this.$message.warning("请先登录在购物");
       } else {
+        let { name, price, _id } = this.data;
+        let params = {
+          name,
+          price,
+          _id,
+          imgUrl: this.data.imgUrl[0].url,
+          count: this.buyNum, //购买数量
+          allCount: this.data.count, //库存
+          userName: window.sessionStorage.getItem("graduation-design"),
+          time: this.getDate()
+        };
+        this.$http.shoppingItem(params).then(res => {
+          this.$router.push({
+            path: "/shoppingCar"
+          });
+        });
       }
     },
     addShopping() {
@@ -148,13 +164,10 @@ export default {
           userName: window.sessionStorage.getItem("graduation-design"),
           time: this.getDate()
         };
-        // console.log(11, params);
-
         this.$http.shoppingItem(params).then(res => {
           if (res.data.userName) {
             this.$message.success("成功加入购物车");
           }
-          // console.log(res);
         });
       }
     }
@@ -275,6 +288,7 @@ input[type="number"] {
       }
       .shopping {
         span {
+          cursor: pointer;
           padding: 3px 15px;
           &:nth-child(1) {
             border: 1px solid #f0cab6;

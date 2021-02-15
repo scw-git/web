@@ -88,26 +88,6 @@
         </div>
       </div>
     </div>
-    <!-- 化妆品 -->
-    <!-- <div class="fav">
-      <div class="fav-title">
-        <p style="color:#ff9f00;border-left: 4px solid #ff9f00;">
-          电子产品
-          <a style="float:right;color:#ff9f00">更多 ></a>
-        </p>
-      </div>
-      <div class="fav-content">
-        <div class="items">
-          <div class="item" v-for="item in (5)" :key="item" @click="toDetail">
-            <div class="img-wrap">
-              <img src="@/assets/content/1.jpg" alt />
-            </div>
-            <h5>花去哪儿findflower干花真花樱桃花背影蓬蓬裙永生花</h5>
-            <div class="price">￥19.99</div>
-          </div>
-        </div>
-      </div>
-    </div>-->
   </div>
 </template>
 <script>
@@ -117,7 +97,8 @@ export default {
       obj: {
         phone: [],
         cosmetic: [],
-        recommend: []
+        recommend: [],
+        n: 0
       }
     };
   },
@@ -148,20 +129,35 @@ export default {
       };
       this.$http.getProduct({ params }).then(res => {
         let all = res.data.data;
-        this.obj.recommend = this.getRandomArray(all, 10);
+        // 这里有个重大的bug，如果用getRandomArray方法（自己写的），则所有的商品数少于等于10个。前端页面会一直没有响应
+        this.obj.recommend = this.getRandomArrayElements(all, 10);
       });
     },
-    getRandomArray(arr, n) {
-      let newArr = [];
-      while (newArr.length < n) {
-        let ran = Math.ceil(Math.random() * arr.length);
-        if (ran < arr.length) {
-          newArr.push(arr[ran]);
-          arr.splice(ran, 1);
-        }
+    getRandomArrayElements(arr, count) {
+      var shuffled = arr.slice(0),
+        i = arr.length,
+        min = i - count,
+        temp,
+        index;
+      while (i-- > min) {
+        index = Math.floor((i + 1) * Math.random());
+        temp = shuffled[index];
+        shuffled[index] = shuffled[i];
+        shuffled[i] = temp;
       }
-      return newArr;
+      return shuffled.slice(min);
     },
+    // getRandomArray(arr, n) {
+    //   let newArr = [];
+    //   while (newArr.length < n) {
+    //     let ran = Math.ceil(Math.random() * arr.length);
+    //     if (ran < arr.length) {
+    //       newArr.push(arr[ran]);
+    //       arr.splice(ran, 1);
+    //     }
+    //   }
+    //   return newArr;
+    // },
 
     toRecommendDetail(id) {
       this.$router.push({

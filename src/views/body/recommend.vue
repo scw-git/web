@@ -64,7 +64,7 @@ export default {
         this.$http.getProduct({ params }).then(res => {
           let data = res.data.data;
           this.data = this.getRandomArrayElements(data, 3);
-          console.log(this.data);
+          // console.log(this.data);
         });
       }
     }
