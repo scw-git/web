@@ -1,6 +1,12 @@
 <template>
   <div class="change-password">
     <a-form-model ref="ruleForm" :model="ruleForm" :rules="rules" v-bind="layout">
+      <a-form-model-item label="用户名" style="margin-bottom:10px;">
+        <span style="font-size:20px;">{{userName}}</span>
+      </a-form-model-item>
+      <a-form-model-item label="输入旧密码" prop="oldPw">
+        <a-input v-model="ruleForm.oldPw"></a-input>
+      </a-form-model-item>
       <a-form-model-item label="输入新密码" prop="pw" hasFeedback>
         <a-input type="password" v-model="ruleForm.pw"></a-input>
       </a-form-model-item>
@@ -36,24 +42,52 @@ export default {
         callback();
       }
     };
+    let verifyOldPw = (rule, value, callback) => {
+      if (value == "") {
+        callback("不能为空");
+      } else {
+        if (this.tag == 1) {
+          let params = {
+            userName: window.sessionStorage.getItem("graduation-design")
+          };
+          this.$http.getUsers({ params }).then(res => {
+            if (value == res.data[0].pw) {
+              callback();
+            } else {
+              callback("原密码错误");
+            }
+          });
+        } else {
+          callback();
+        }
+      }
+    };
 
     return {
+      userName: window.sessionStorage.getItem("graduation-design"),
+      tag: 0,
       layout: {
         labelCol: { span: 4 },
         wrapperCol: { span: 16 }
       },
       ruleForm: {
         pw: "",
-        confirmPw: ""
+        confirmPw: "",
+        oldPw: ""
       },
       rules: {
         pw: [{ validator: password, trigger: "change" }],
-        confirmPw: [{ validator: configPassWord, trigger: "change" }]
+        confirmPw: [{ validator: configPassWord, trigger: "change" }],
+        oldPw: [{ validator: verifyOldPw }]
       }
     };
   },
   methods: {
     e() {
+      this.tag = 1;
+      setTimeout(() => {
+        this.tag = 0;
+      }, 500);
       this.$refs.ruleForm.validate(valid => {
         if (valid) {
           this.$confirm({

@@ -11,7 +11,7 @@
         <router-link to="/allProduct">全部商品</router-link>
       </span>
     </div>
-    <router-view @isShow="handle"></router-view>
+    <router-view class="body" @isShow="handle"></router-view>
     <end />
   </div>
 </template>
@@ -101,6 +101,9 @@ export default {
       border-bottom: 1.5px solid #fff;
       padding-bottom: 3px;
     }
+  }
+  .body {
+    margin: 10px 10%;
   }
 }
 </style>

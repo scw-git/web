@@ -108,7 +108,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .detail {
-  margin: 10px 10%;
   display: flex;
   .left {
     flex-shrink: 0; //空间不足时，不收缩

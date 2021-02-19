@@ -15,8 +15,13 @@
       </div>
       <div class="search">
         <div class="search-wrap">
-          <input type="text" placeholder="请输入商品名称" />
-          <span>搜索</span>
+          <input
+            type="text"
+            v-model="searchValue"
+            @keydown.enter="searchProduct"
+            placeholder="请输入商品名称"
+          />
+          <span style="cursor:pointer" @click="searchProduct">搜索</span>
         </div>
       </div>
     </div>
@@ -130,6 +135,7 @@ export default {
       }
     };
     return {
+      searchValue: "",
       name: "",
       showError: false,
       loginShow: false,
@@ -188,6 +194,14 @@ export default {
   },
   watch: {},
   methods: {
+    searchProduct() {
+      this.$router.push({
+        path: "/searchResult",
+        query: {
+          searchValue: this.searchValue
+        }
+      });
+    },
     toUserCenter() {
       this.$router.push({
         path: "/userCenter"

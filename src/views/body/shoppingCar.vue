@@ -116,12 +116,21 @@ export default {
     },
     //点击了马上支付
     buyNow() {
+      //更新库存
+      for (let i of this.tableData) {
+        let params = {
+          count: i.allCount - i.count,
+          id: i._id
+        };
+        this.$http.updateInventory(params);
+      }
+      //更新付款状态
       let params = {
         userName: window.sessionStorage.getItem("graduation-design"),
         orderNumber: this.orderNumber,
         status: "已付款"
       };
-      this.$http.updateOrder(params); //更新付款状态
+      this.$http.updateOrder(params);
       this.$message.success("支付成功");
       this.laterBuy();
     },
@@ -134,11 +143,24 @@ export default {
       this.$http.delOrder({ params });
       this.visible = false;
     },
+    //自动补充0
+    returnFloat(value) {
+      let str = value.toString().split(".");
+      if (str.length === 1) {
+        return value + ".00";
+      } else {
+        if (str[1].length == 1) {
+          return value + "0";
+        } else {
+          return value;
+        }
+      }
+    },
     //点击了结算
     buy() {
+      this.total = 0; //先清除上次的缓存
       // 算出总价
       for (let i of this.tableData) {
-        this.total = 0; //先清除上次的缓存
         this.total = this.total + i.count * i.price;
       }
       let params = {
@@ -157,7 +179,7 @@ export default {
           let params = {
             userName,
             orderNumber: this.getDate("orderNumber"),
-            total: this.total + ".00",
+            total: this.returnFloat(this.total),
             date: this.getDate("date"),
             consignee,
             myPhone,
@@ -220,6 +242,7 @@ export default {
     delAllShoppingItem() {
       this.$http.delAllShoppingItem();
     },
+    // 获取购物车列表
     getShoppingItem(userName) {
       let params = {
         userName
@@ -238,7 +261,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .shopping-car {
-  margin: 10px 10%;
   input {
     border: 1px solid #dcdcdc;
     outline: none;

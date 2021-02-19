@@ -61,8 +61,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .user-center {
-  margin: 10px 10%;
-
   .title {
     width: 100%;
     color: #fff;

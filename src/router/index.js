@@ -64,6 +64,11 @@ const routes = [
 
       },
       {
+        path: '/searchResult',
+        component: () => import('../views/body/searchResult.vue')
+
+      },
+      {
         path: '/userCenter',
         component: () => import('../views/body/userCenter.vue'),
         redirect: '/userCenter/userInfo',

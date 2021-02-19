@@ -14,7 +14,11 @@
           <span v-else>女</span>
         </template>
       </a-table-column>
-      <a-table-column title="密码" data-index="pw"></a-table-column>
+      <a-table-column title="密码">
+        <template slot-scope="record">
+          <span>****</span>
+        </template>
+      </a-table-column>
     </a-table>
   </div>
 </template>
