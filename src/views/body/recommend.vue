@@ -57,16 +57,18 @@ export default {
   },
   watch: {
     $route(to) {
-      if (to.query.type) {
-        let params = {
-          type: to.query.type
-        };
-        this.$http.getProduct({ params }).then(res => {
-          let data = res.data.data;
-          this.data = this.getRandomArrayElements(data, 5);
-          // console.log(this.data);
-        });
-      }
+      let path = to.path;
+      setTimeout(() => {
+        if (path.includes("itemDetail")) {
+          let params = {
+            type: window.sessionStorage.getItem("type")
+          };
+          this.$http.getProduct({ params }).then(res => {
+            let data = res.data.data;
+            this.data = this.getRandomArrayElements(data, 5);
+          });
+        }
+      }, 200);
     }
   },
 

@@ -26,6 +26,7 @@
         </p>
       </div>
       <div class="fav-content">
+        <a-empty v-if="obj.recommend.length==0"></a-empty>
         <div class="items">
           <div
             class="item"
@@ -55,6 +56,7 @@
         </p>
       </div>
       <div class="fav-content">
+        <a-empty v-if="obj.phone.length==0"></a-empty>
         <div class="items">
           <div class="item" v-for="(item,i) in obj.phone" :key="i" @click="toDetail(item._id)">
             <div class="img-wrap">
@@ -77,6 +79,7 @@
         </p>
       </div>
       <div class="fav-content">
+        <a-empty v-if="obj.cosmetic.length==0"></a-empty>
         <div class="items">
           <div class="item" v-for="(item,i) in obj.cosmetic" :key="i" @click="toDetail(item._id)">
             <div class="img-wrap">
@@ -129,8 +132,8 @@ export default {
       this.$http.getProduct({ params }).then(res => {
         let all = res.data.data;
         // 这里有个重大的bug，如果用getRandomArray方法（自己写的），则所有的商品数少于等于10个。前端页面会一直没有响应
-        //用getRandomArray，如果总数少于10，会出现undefined情况
-        this.obj.recommend = this.getRandomArray(all, 10);
+        //用getRandomArrayElements，如果总数少于10，会出现undefined情况
+        this.obj.recommend = this.getRandomArrayElements(all, 10);
         // console.log(this.obj.recommend);
       });
     },

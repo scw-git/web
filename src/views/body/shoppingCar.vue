@@ -189,7 +189,6 @@ export default {
           this.$http.order(params).then(res => {
             this.dataAcount = res.data;
             this.orderNumber = res.data[0].orderNumber;
-            // console.log(res.data);
           });
         }
       });

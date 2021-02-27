@@ -106,6 +106,8 @@ export default {
       };
       this.$http.getProductDetail({ params }).then(res => {
         this.data = res.data;
+        window.sessionStorage.setItem("type", this.data.type);
+        // console.log(this.data.type);
       });
     },
     subtract() {
